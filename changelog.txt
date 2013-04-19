@@ -1,0 +1,19 @@
+Just want to keep track of any changes I make here
+
+JSPong v1.1:
+	Made it so paddles can't exit canvas
+	Set the starting velocity of the ball to be randomized
+	Also, made it so winner takes it
+	Got rid of some magic numbers (height and width)
+	Players now should start in the center
+	Adjusted some things
+	Made it harder by making the paddles smaller
+	Acceleration after hitting paddles is now higher
+	Changed around the physics - ball y velocity is now dependent on where it hits the paddle
+		I'll tweak this down the road
+	Upped the player speed a bit to account for increased difficulty
+	Also added a limit on y velocity so it's not ridiculous
+	Line count: 229
+
+JSPong v1:
+	Initial Release

@@ -4,15 +4,22 @@ var gameBall = new ball(0, 0);
 var firstPlayer = new player1(0, 0);
 var secondPlayer = new player2(0, 0);
 
-var SPEED_PLAYER = 10;
+// Constants
+var SPEED_PLAYER = 15;
 var WIDTH_PLAYER = 5;
-var HEIGHT_PLAYER = 200;
+var HEIGHT_PLAYER = 50;
 var RADIUS_BALL = 5;
+var PLAYER_BUFFER = 50;
+
+var WIDTH = 1280;
+var HEIGHT = 720;
 
 var playing = 1; // of course we're playing!
 
+// Things related to score
 var score1 = 0;
 var score2 = 0;
+var twoScored = 0;
 
 // Key controller stuff
 var Key = {
@@ -55,9 +62,9 @@ function Game() {
 	this.begin = begin;
 
 	function load() {
-		gameBall.load(640, 360); // Init ball
-		firstPlayer.load(5, 360); // Init left player
-		secondPlayer.load(1270, 360); // Init right player
+		gameBall.load(WIDTH/2, HEIGHT/2); // Init ball
+		firstPlayer.load(PLAYER_BUFFER, HEIGHT / 2 - HEIGHT_PLAYER / 2); // Init left player
+		secondPlayer.load(WIDTH - PLAYER_BUFFER - WIDTH_PLAYER, HEIGHT / 2 - HEIGHT_PLAYER / 2); // Init right player
 
 		this.begin();
 	}
@@ -79,39 +86,44 @@ function Game() {
 
 	function update() {
 		// Player 1
-		if (Key.isDown(Key.W)) firstPlayer.y -= SPEED_PLAYER;
-		if (Key.isDown(Key.S)) firstPlayer.y += SPEED_PLAYER;
+		if (Key.isDown(Key.W) && firstPlayer.y > 0) firstPlayer.y -= SPEED_PLAYER;
+		if (Key.isDown(Key.S) && firstPlayer.y < HEIGHT-HEIGHT_PLAYER) firstPlayer.y += SPEED_PLAYER;
 
 		// Player 2
-		if (Key.isDown(Key.UP)) secondPlayer.y -= SPEED_PLAYER;
-		if (Key.isDown(Key.DOWN)) secondPlayer.y += SPEED_PLAYER;
+		if (Key.isDown(Key.UP) && secondPlayer.y > 0) secondPlayer.y -= SPEED_PLAYER;
+		if (Key.isDown(Key.DOWN) && secondPlayer.y < HEIGHT-HEIGHT_PLAYER) secondPlayer.y += SPEED_PLAYER;
 
 		// Ball movement
+		if (gameBall.yVel > 4) {
+			gameBall.yVel = 4;
+		}
 		gameBall.x += gameBall.xVel;
 		gameBall.y += gameBall.yVel;
 
 		// Ball bounce off walls
-		if (gameBall.y <= 0 || gameBall.y > 720) {
+		if (gameBall.y <= 0 || gameBall.y > HEIGHT) {
 			gameBall.yVel *= -1;
 		}
 
 		// Ball bounce off paddles
-		if (gameBall.x >= 1270) {
+		if (gameBall.x >= WIDTH - PLAYER_BUFFER - WIDTH_PLAYER) {
 			// On right side
 			// Need to improve this check later
 			// It skips out when going fast
 			// Perhaps increase the threshold when checking win case
 			if (gameBall.y >= secondPlayer.y && gameBall.y <= secondPlayer.y + HEIGHT_PLAYER) {
 				gameBall.xVel *= -1;
-				gameBall.xVel -= 1;
+				gameBall.xVel -= 1.5;
+				gameBall.yVel += (gameBall.y - (secondPlayer.y + HEIGHT_PLAYER) / 2) / 40;
 			}
 		}
 
-		if (gameBall.x <= 10) {
+		if (gameBall.x <= PLAYER_BUFFER + WIDTH_PLAYER) {
 			// On left side
 			if (gameBall.y >= firstPlayer.y && gameBall.y <= firstPlayer.y + HEIGHT_PLAYER) {
 				gameBall.xVel *= -1;
-				gameBall.xVel += 1;
+				gameBall.xVel += 1.5;
+				gameBall.yVel = (gameBall.y - (firstPlayer.y + HEIGHT_PLAYER) / 2) / 40;
 			}
 		}
 
@@ -120,20 +132,30 @@ function Game() {
 
 		// Start game
 		if (Key.isDown(Key.SPACE)) {
-			gameBall.xVel = 2;
-			gameBall.yVel = -2;
+
+			// Randomized starting velocities
+			gameBall.xVel = Math.floor(Math.random()*5) + 3;
+			gameBall.yVel = Math.floor(Math.random()*3) + 1;
+
+			if (twoScored) {
+				// If player two scored, then start the ball going the other way (winner takes it)
+				gameBall.xVel *= -1;
+				gameBall.yVel *= -1;
+			}
 		}
 
 		// Puntos
-		if (gameBall.x > 1290) {
+		if (gameBall.x > WIDTH) {
 			// Point player1
 			score1 += 1;
-			gameBall.load(640, 360);
+			twoScored = 0;
+			gameBall.load(WIDTH / 2, Math.floor(Math.random() * 401) + 160); // Random middle 400
 		}
 
-		if (gameBall.x < -10) {
+		if (gameBall.x < 0) {
 			score2 += 1;
-			gameBall.load(640, 360);
+			twoScored = 1;
+			gameBall.load(WIDTH / 2, Math.floor(Math.random() * 401) + 160);
 		}
 	}
 
@@ -153,8 +175,8 @@ function Game() {
     	ctx.arc(gameBall.x,gameBall.y,RADIUS_BALL,0,2*Math.PI);    	
 
     	// Middle line
-    	ctx.moveTo(640, 0);
-    	ctx.lineTo(640, 720);
+    	ctx.moveTo(WIDTH / 2, 0);
+    	ctx.lineTo(WIDTH / 2, HEIGHT);
 
     	// Scores
     	ctx.font="30px Arial";
