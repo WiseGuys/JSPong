@@ -17,3 +17,4 @@ JSPong v1.1:
 
 JSPong v1:
 	Initial Release
+	Line count: 207
