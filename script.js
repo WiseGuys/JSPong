@@ -3,6 +3,8 @@ var GameController = new Game();
 var gameBall = new ball(0, 0);
 var firstPlayer = new player1(0, 0);
 var secondPlayer = new player2(0, 0);
+var menuContoller = new menu();
+var resetController = new reset();
 
 // Constants
 var SPEED_PLAYER = 15;
@@ -20,6 +22,18 @@ var playing = 1; // of course we're playing!
 var score1 = 0;
 var score2 = 0;
 var twoScored = 0;
+
+// Game states
+var GameState = {
+	LOAD: 0, // loading before main menu
+	MENU: 1, // main menu
+	PLAY: 2, // let's get the ball moving
+	PAUSE: 3, // paused, not implemented yet
+	RESET: 4, // after a score or at beginning
+	GAMEOVER: 5 // self-explanatory
+};
+
+var state = GameState.LOAD;
 
 // Key controller stuff
 var Key = {
@@ -60,6 +74,8 @@ function loadGame() {
 function Game() {
 	this.load = load;
 	this.begin = begin;
+	this.update = update;
+	this.draw = draw;
 
 	function load() {
 		gameBall.load(WIDTH/2, HEIGHT/2); // Init ball
@@ -72,15 +88,32 @@ function Game() {
 	function begin() {
 		// Start the framerate controller
 		_intervalId = setInterval(main, 1000 / 50);  // 2nd num is fps
+		state = GameState.MENU;
 	}
 
 	function main() {
+
 		if (playing) {
-			// Main loop, woohoo
-			update();
-			draw();
+			// Gamestate switch
+			switch(state) {
+			case GameState.LOAD:
+				// Should already be loaded, maybe a loading screen later
+				break;
+			case GameState.MENU:
+				menuContoller.draw();
+				if (Key.isDown(Key.SPACE)) state = GameState.RESET;
+				break;
+			case GameState.RESET:
+				resetController.update();
+				resetController.draw();
+				break;
+			case GameState.PLAY:
+				update();
+				draw();
+				break;
+			}
 		} else {
-			// End interval (find this online)
+			// End interval, look up later
 		}
 	}
 
@@ -128,34 +161,22 @@ function Game() {
 		}
 
 		// Quit?
-		if (Key.isDown(Key.ESC)) playing = 0;
-
-		// Start game
-		if (Key.isDown(Key.SPACE)) {
-
-			// Randomized starting velocities
-			gameBall.xVel = Math.floor(Math.random()*5) + 3;
-			gameBall.yVel = Math.floor(Math.random()*3) + 1;
-
-			if (twoScored) {
-				// If player two scored, then start the ball going the other way (winner takes it)
-				gameBall.xVel *= -1;
-				gameBall.yVel *= -1;
-			}
-		}
+		if (Key.isDown(Key.ESC)) playing = 0;		
 
 		// Puntos
 		if (gameBall.x > WIDTH) {
 			// Point player1
 			score1 += 1;
 			twoScored = 0;
-			gameBall.load(WIDTH / 2, Math.floor(Math.random() * 401) + 160); // Random middle 400
+			state = GameState.RESET;
+			resetController.load();
 		}
 
 		if (gameBall.x < 0) {
 			score2 += 1;
 			twoScored = 1;
-			gameBall.load(WIDTH / 2, Math.floor(Math.random() * 401) + 160);
+			state = GameState.RESET;
+			resetController.load();
 		}
 	}
 
@@ -186,6 +207,92 @@ function Game() {
     	// Draw it
     	ctx.stroke();
     }
+}
+
+// Menu controller
+function menu() {
+	this.titleMsg = "JSPong";
+	this.message = "Press space to start!";
+	this.draw = draw;
+
+	function draw() {
+		var c = document.getElementById("canvas");
+		var ctx = c.getContext("2d");
+		canvas.width = canvas.width;
+		ctx.fillStyle = "#000";
+
+		// Title
+		ctx.font="30px Arial";
+		ctx.fillText(this.titleMsg,WIDTH / 2, 60);
+
+		// Message
+		ctx.font="15px Arial";
+		ctx.fillText(this.message,WIDTH / 2, 300);
+
+		// Draw it
+		ctx.stroke();
+	}
+}
+
+// Manages game resets, at beginning and at scores
+function reset() {
+	this.load = load;
+	this.draw = draw;
+	this.update = update;
+
+	function load() {
+		gameBall.load(WIDTH / 2, Math.floor(Math.random() * 401) + 160);
+		firstPlayer.load(PLAYER_BUFFER, HEIGHT / 2 - HEIGHT_PLAYER / 2); // Init left player
+		secondPlayer.load(WIDTH - PLAYER_BUFFER - WIDTH_PLAYER, HEIGHT / 2 - HEIGHT_PLAYER / 2); // Init right player
+	}
+
+	function update() {
+		// Quit?
+		if (Key.isDown(Key.ESC)) playing = 0;
+
+		// Start game
+		if (Key.isDown(Key.SPACE)) {
+			state = GameState.PLAY;
+
+			// Randomized starting velocities
+			gameBall.xVel = Math.floor(Math.random()*5) + 3;
+			gameBall.yVel = Math.floor(Math.random()*3) + 1;
+
+			if (twoScored) {
+				// If player two scored, then start the ball going the other way (winner takes it)
+				gameBall.xVel *= -1;
+				gameBall.yVel *= -1;
+			}
+		}
+	}
+
+	function draw() {
+		var c=document.getElementById("canvas");
+    	var ctx=c.getContext("2d");
+    	canvas.width = canvas.width; // clear screen
+    	ctx.fillStyle="#000";
+
+    	// Player 1
+    	ctx.fillRect(firstPlayer.x,firstPlayer.y,WIDTH_PLAYER,HEIGHT_PLAYER);
+
+    	// Player 2
+    	ctx.fillRect(secondPlayer.x, secondPlayer.y, WIDTH_PLAYER, HEIGHT_PLAYER);
+
+    	// Ball
+    	ctx.arc(gameBall.x,gameBall.y,RADIUS_BALL,0,2*Math.PI);    	
+
+    	// Middle line
+    	ctx.moveTo(WIDTH / 2, 0);
+    	ctx.lineTo(WIDTH / 2, HEIGHT);
+
+    	// Scores
+    	ctx.font="30px Arial";
+    	ctx.fillText(score1,600,25);
+    	ctx.fillText(score2,660,25);
+
+    	// Draw it
+    	ctx.stroke();
+	}
 }
 
 // Ball controller

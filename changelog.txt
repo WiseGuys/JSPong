@@ -1,5 +1,15 @@
 Just want to keep track of any changes I make here
 
+JSPong v1.2:
+	Implemented gamestates
+		Loading
+		Main Menu
+		Setting up/resetting
+		Playing
+		Gameover
+	Fixed some little bugs
+	Line count: 336
+
 JSPong v1.1:
 	Made it so paddles can't exit canvas
 	Set the starting velocity of the ball to be randomized

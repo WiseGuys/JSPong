@@ -1,0 +1,14 @@
+Here I'll put stuff that I want to do in the future
+
+Major:
+	Add art
+	Add music
+	Add story
+	Make game
+
+Minor:
+	Tighten up physics and collision stuff
+
+Really minor:
+	Find a nice font to use
+	Maybe add a "space to start" text when reset
