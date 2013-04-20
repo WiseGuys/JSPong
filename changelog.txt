@@ -1,5 +1,14 @@
 Just want to keep track of any changes I make here
 
+JSPong v1.2.1:
+	Got sound working
+		Added bouncing sound with one note
+	Made it so arrow keys and WASD don't scroll
+	Centered text
+	Got sound to work with a series of notes
+		Next up will be loading from file
+	Line count: 380
+
 JSPong v1.2:
 	Implemented gamestates
 		Loading

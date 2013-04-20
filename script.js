@@ -35,6 +35,14 @@ var GameState = {
 
 var state = GameState.LOAD;
 
+// Sounds
+var C2a = new Audio("sounds/C2a.wav");
+var Ab1a = new Audio("sounds/Ab1a.wav");
+
+var sounds = [C2a, Ab1a, Ab1a, C2a, C2a];
+var currentSound = 0;
+var maxSound = 4;
+
 // Key controller stuff
 var Key = {
     _pressed: {},
@@ -48,6 +56,7 @@ var Key = {
     W: 87,
     S: 83,
     SPACE: 32,
+    ENTER: 13,
           
     isDown: function(keyCode) {
         return this._pressed[keyCode];
@@ -101,7 +110,7 @@ function Game() {
 				break;
 			case GameState.MENU:
 				menuContoller.draw();
-				if (Key.isDown(Key.SPACE)) state = GameState.RESET;
+				menuContoller.update();
 				break;
 			case GameState.RESET:
 				resetController.update();
@@ -136,6 +145,11 @@ function Game() {
 		// Ball bounce off walls
 		if (gameBall.y <= 0 || gameBall.y > HEIGHT) {
 			gameBall.yVel *= -1;
+			sounds[currentSound].play();
+			currentSound += 1;
+			if (currentSound > maxSound) {
+				currentSound = 0;
+			}
 		}
 
 		// Ball bounce off paddles
@@ -148,6 +162,11 @@ function Game() {
 				gameBall.xVel *= -1;
 				gameBall.xVel -= 1.5;
 				gameBall.yVel += (gameBall.y - (secondPlayer.y + HEIGHT_PLAYER) / 2) / 40;
+				sounds[currentSound].play();
+				currentSound += 1;
+				if (currentSound > maxSound) {
+					currentSound = 0;
+				}
 			}
 		}
 
@@ -157,6 +176,11 @@ function Game() {
 				gameBall.xVel *= -1;
 				gameBall.xVel += 1.5;
 				gameBall.yVel = (gameBall.y - (firstPlayer.y + HEIGHT_PLAYER) / 2) / 40;
+				sounds[currentSound].play();
+				currentSound += 1;
+				if (currentSound > maxSound) {
+					currentSound = 0;
+				}
 			}
 		}
 
@@ -212,8 +236,9 @@ function Game() {
 // Menu controller
 function menu() {
 	this.titleMsg = "JSPong";
-	this.message = "Press space to start!";
+	this.message = "Press enter to start!";
 	this.draw = draw;
+	this.update = update;
 
 	function draw() {
 		var c = document.getElementById("canvas");
@@ -223,14 +248,20 @@ function menu() {
 
 		// Title
 		ctx.font="30px Arial";
-		ctx.fillText(this.titleMsg,WIDTH / 2, 60);
+		textDimensions = ctx.measureText(this.titleMsg);
+		ctx.fillText(this.titleMsg,WIDTH / 2 - textDimensions.width / 2, 60);
 
 		// Message
 		ctx.font="15px Arial";
-		ctx.fillText(this.message,WIDTH / 2, 300);
+		textDimensions = ctx.measureText(this.message);
+		ctx.fillText(this.message,WIDTH / 2 - textDimensions.width / 2, 300);
 
 		// Draw it
 		ctx.stroke();
+	}
+
+	function update() {
+		if (Key.isDown(Key.ENTER)) state = GameState.RESET;
 	}
 }
 
@@ -290,6 +321,11 @@ function reset() {
     	ctx.fillText(score1,600,25);
     	ctx.fillText(score2,660,25);
 
+    	// Instructions
+    	ctx.font="15px Arial";
+    	textDimensions = ctx.measureText("Press space to begin");
+    	ctx.fillText("Press space to begin", WIDTH / 2 - textDimensions.width / 2, HEIGHT - 100);
+
     	// Draw it
     	ctx.stroke();
 	}
@@ -334,3 +370,11 @@ function player2(newX, newY) {
 		this.y = newY;
 	}
 }
+
+// Prevent arrow key and WASD scrolling
+window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+    if([32, 37, 38, 39, 40, 87, 65, 83, 68].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+}, false);
