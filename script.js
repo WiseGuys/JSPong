@@ -35,7 +35,11 @@ var GameState = {
 
 var state = GameState.LOAD;
 
-// Sounds
+// General sounds
+var scoreSound = new Audio("sounds/score.wav");
+var pointLostSound = new Audio("sounds/pointlost.wav");
+
+// Bounce sounds
 var C2a = new Audio("sounds/C2a.wav");
 var Ab1a = new Audio("sounds/Ab1a.wav");
 
@@ -145,15 +149,29 @@ function Game() {
 		// Ball bounce off walls
 		if (gameBall.y <= 0 || gameBall.y > HEIGHT) {
 			gameBall.yVel *= -1;
-			sounds[currentSound].play();
+			if (isPlaying(sounds[currentSound])) {
+				console.log("playing");
+				restartSound(sounds[currentSound]);
+			} else {
+				sounds[currentSound].play();
+			}
 			currentSound += 1;
 			if (currentSound > maxSound) {
 				currentSound = 0;
 			}
+
+			// Make sure it's within the bounds
+			if (gameBall.y < 0) {
+				gameBall.y = 0;
+			}
+
+			if (gameBall.y > HEIGHT) {
+				gameBall.y = HEIGHT;
+			}
 		}
 
 		// Ball bounce off paddles
-		if (gameBall.x >= WIDTH - PLAYER_BUFFER - WIDTH_PLAYER) {
+		if (gameBall.x >= WIDTH - PLAYER_BUFFER - WIDTH_PLAYER && gameBall.x <= WIDTH - PLAYER_BUFFER + WIDTH_PLAYER) {
 			// On right side
 			// Need to improve this check later
 			// It skips out when going fast
@@ -162,7 +180,11 @@ function Game() {
 				gameBall.xVel *= -1;
 				gameBall.xVel -= 1.5;
 				gameBall.yVel += (gameBall.y - (secondPlayer.y + HEIGHT_PLAYER) / 2) / 40;
-				sounds[currentSound].play();
+				if (isPlaying(sounds[currentSound])) {
+					restartSound(sounds[currentSound]);
+				} else {
+					sounds[currentSound].play();
+				}
 				currentSound += 1;
 				if (currentSound > maxSound) {
 					currentSound = 0;
@@ -170,13 +192,17 @@ function Game() {
 			}
 		}
 
-		if (gameBall.x <= PLAYER_BUFFER + WIDTH_PLAYER) {
+		if (gameBall.x <= PLAYER_BUFFER + WIDTH_PLAYER && gameBall.x >= PLAYER_BUFFER - WIDTH_PLAYER) {
 			// On left side
 			if (gameBall.y >= firstPlayer.y && gameBall.y <= firstPlayer.y + HEIGHT_PLAYER) {
 				gameBall.xVel *= -1;
 				gameBall.xVel += 1.5;
 				gameBall.yVel = (gameBall.y - (firstPlayer.y + HEIGHT_PLAYER) / 2) / 40;
-				sounds[currentSound].play();
+				if (isPlaying(sounds[currentSound])) {
+					restartSound(sounds[currentSound]);
+				} else {
+					sounds[currentSound].play();
+				}
 				currentSound += 1;
 				if (currentSound > maxSound) {
 					currentSound = 0;
@@ -189,9 +215,10 @@ function Game() {
 
 		// Puntos
 		if (gameBall.x > WIDTH) {
-			// Point player1
+			// Point player1 (good)
 			score1 += 1;
 			twoScored = 0;
+			scoreSound.play();
 			state = GameState.RESET;
 			resetController.load();
 		}
@@ -199,6 +226,7 @@ function Game() {
 		if (gameBall.x < 0) {
 			score2 += 1;
 			twoScored = 1;
+			pointLostSound.play();
 			state = GameState.RESET;
 			resetController.load();
 		}
@@ -378,3 +406,19 @@ window.addEventListener("keydown", function(e) {
         e.preventDefault();
     }
 }, false);
+
+// Check if sound is playing
+function isPlaying(audelem) { 
+	console.log(audelem.currentTime);
+	return !audelem.paused; 
+}
+
+// Restart the sound in order to avoid missing one
+function restartSound(sound) {
+    try {
+        sound.currentTime = 0;
+    } catch (e) {
+        // Fail silently but show in F12 developer tools console
+        if(window.console && console.error("Error:" + e));
+    }
+}

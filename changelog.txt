@@ -1,5 +1,11 @@
 Just want to keep track of any changes I make here
 
+JSPong v1.2.2:
+	Fixed ball getting stuck at top and bottom
+	Fixed sounds playing right after another to work
+	Changed collision detection to hopefully be more accurate
+	Added point win and loss sounds (left side is player1)
+
 JSPong v1.2.1:
 	Got sound working
 		Added bouncing sound with one note
