@@ -12,6 +12,7 @@ JSPong v1.3:
 		Gazillions of lines of code!
 		As in more than the game!
 		Should probably work on that later!
+	FIxed a type (derp)
 	Line count: 666
 
 	F**k github
