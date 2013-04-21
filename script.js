@@ -3,7 +3,7 @@ var GameController = new Game();
 var gameBall = new ball(0, 0);
 var firstPlayer = new player1(0, 0);
 var secondPlayer = new player2(0, 0);
-var menuContoller = new menu();
+var menuController = new menu();
 var resetController = new reset();
 
 // Constants
@@ -34,6 +34,26 @@ var GameState = {
 };
 
 var state = GameState.LOAD;
+
+// Menu states 
+var MenuState = {
+	MAIN: 0,
+	SINGLE: 1,
+	TWO: 2,
+	OPTIONS: 3,
+	HELP: 4,
+	EXIT: 5
+};
+
+var stateMenu = MenuState.MAIN;
+
+// Buttons
+var butSinglePlayer = new button(WIDTH / 2, HEIGHT / 2 - 100, "Single Player");
+var butTwoPlayer = new button(WIDTH / 2, HEIGHT / 2, "Two Player");
+var butOptions = new button(WIDTH / 2, HEIGHT  / 2 + 100, "Options");
+var butHelp = new button(WIDTH / 2, HEIGHT / 2 + 200, "Help");
+
+var butBack = new button(WIDTH / 2, HEIGHT / 2, "Back");
 
 // General sounds
 var scoreSound = new Audio("sounds/score.wav");
@@ -95,6 +115,8 @@ function Game() {
 		firstPlayer.load(PLAYER_BUFFER, HEIGHT / 2 - HEIGHT_PLAYER / 2); // Init left player
 		secondPlayer.load(WIDTH - PLAYER_BUFFER - WIDTH_PLAYER, HEIGHT / 2 - HEIGHT_PLAYER / 2); // Init right player
 
+		menuController.load();
+
 		this.begin();
 	}
 
@@ -113,8 +135,8 @@ function Game() {
 				// Should already be loaded, maybe a loading screen later
 				break;
 			case GameState.MENU:
-				menuContoller.draw();
-				menuContoller.update();
+				menuController.draw();
+				menuController.update();
 				break;
 			case GameState.RESET:
 				resetController.update();
@@ -263,10 +285,25 @@ function Game() {
 
 // Menu controller
 function menu() {
-	this.titleMsg = "JSPong";
-	this.message = "Press enter to start!";
+	// Methods
 	this.draw = draw;
 	this.update = update;
+	this.checkClicks = checkClicks;
+	this.load = load;
+
+	// Main menu
+	this.titleMsg = "JSPong";
+	this.message = "Welcome!";
+	this.buttonsMain = [];
+
+	// Options menu
+	this.optionsMsg = "Options";
+	this.buttonsOptions = [];
+
+	// Help menu
+	this.helpMsg = "Help";
+	this.helpText = "Figure it out";
+	this.buttonsHelp = [];
 
 	function draw() {
 		var c = document.getElementById("canvas");
@@ -274,23 +311,216 @@ function menu() {
 		canvas.width = canvas.width;
 		ctx.fillStyle = "#000";
 
-		// Title
-		ctx.font="30px Arial";
-		textDimensions = ctx.measureText(this.titleMsg);
-		ctx.fillText(this.titleMsg,WIDTH / 2 - textDimensions.width / 2, 60);
+		// See which menu to draw
+		switch(stateMenu) {
+		case MenuState.MAIN:
+			// Title
+			ctx.font="30px Arial";
+			textDimensions = ctx.measureText(this.titleMsg);
+			ctx.fillText(this.titleMsg,WIDTH / 2 - textDimensions.width / 2, 60);
 
-		// Message
-		ctx.font="15px Arial";
-		textDimensions = ctx.measureText(this.message);
-		ctx.fillText(this.message,WIDTH / 2 - textDimensions.width / 2, 300);
+			// Message
+			ctx.font="15px Arial";
+			textDimensions = ctx.measureText(this.message);
+			ctx.fillText(this.message,WIDTH / 2 - textDimensions.width / 2, 200);
+
+			// Buttons
+			for (var i=0; i < this.buttonsMain.length; i++) {
+				ctx.fillStyle = "#000";
+				this.buttonsMain[i].draw(ctx);
+			}
+
+			break;
+		case MenuState.SINGLE:
+			// not yet implemented, goes straight to game
+			state = GameState.RESET;
+			break;
+		case MenuState.TWO:
+			// not yet implemented, goes straight to game
+			state = GameState.RESET;
+			break;
+		case MenuState.OPTIONS:
+			// Title
+			ctx.font="30px Arial";
+			textDimensions = ctx.measureText(this.optionsMsg);
+			ctx.fillText(this.optionsMsg,WIDTH / 2 - textDimensions.width / 2, 60);
+
+			// Buttons
+			for (var i=0; i < this.buttonsOptions.length; i++) {
+				this.buttonsOptions[i].draw(ctx);
+			}
+
+			break;
+		case MenuState.HELP:
+			// Title
+			ctx.font = "30px Arial";
+			textDimensions = ctx.measureText(this.helpMsg);
+			ctx.fillText(this.helpMsg,WIDTH / 2 - textDimensions.width / 2, 60);
+
+			// Help text
+			ctx.font = "15px Arial";
+			textDimensions = ctx.measureText(this.helpText);
+			ctx.fillText(this.helpText,WIDTH / 2 - textDimensions.width / 2, 200);
+			break;
+
+			// Buttons
+			for (var i=0; i < this.buttonsHelp.length; i++) {
+				this.buttonsHelp[i].draw(ctx);
+			}
+		}
 
 		// Draw it
 		ctx.stroke();
 	}
 
+	// Maybe combine this with draw in the future
 	function update() {
-		if (Key.isDown(Key.ENTER)) state = GameState.RESET;
+		// Go thru buttons of current menu
+		// see if any are clicked
+		switch (stateMenu) {
+		case MenuState.MAIN:
+			if(this.buttonsMain[this.buttonsMain.indexOf(butSinglePlayer)].isClicked) {
+				// Go to single player menu (not added yet)
+				state = GameState.RESET;
+				this.buttonsMain[this.buttonsMain.indexOf(butSinglePlayer)].isClicked = 0;
+			} else if(this.buttonsMain[this.buttonsMain.indexOf(butTwoPlayer)].isClicked) {
+				// Go to two player menu (not added yet)
+				state = GameState.RESET;
+				this.buttonsMain[this.buttonsMain.indexOf(butTwoPlayer)].isClicked = 0;
+			} else if(this.buttonsMain[this.buttonsMain.indexOf(butOptions)].isClicked) {
+				// Go to options menu
+				stateMenu = MenuState.OPTIONS;
+				this.buttonsMain[this.buttonsMain.indexOf(butOptions)].isClicked = 0;
+			} else if(this.buttonsMain[this.buttonsMain.indexOf(butHelp)].isClicked) {
+				// Go to help menu
+				stateMenu = MenuState.HELP;
+				this.buttonsMain[this.buttonsMain.indexOf(butHelp)].isClicked = 0;
+			}
+			break;
+		case MenuState.SINGLE:
+			// not yet implemented
+			state = GameState.RESET;
+			break;
+		case MenuState.TWO:
+			// not made yet
+			state = GameState.RESET;
+			break;
+		case MenuState.OPTIONS:
+			if(this.buttonsOptions[this.buttonsOptions.indexOf(butBack)].isClicked) {
+				// Go back to main menu
+				stateMenu = MenuState.MAIN;
+				this.buttonsOptions[this.buttonsOptions.indexOf(butBack)].isClicked = 0;
+			}
+			break;
+		case MenuState.HELP:
+			if(this.buttonsHelp[this.buttonsHelp.indexOf(butBack)].isClicked) {
+				// Go back to main menu
+				stateMenu = MenuState.MAIN;
+				this.buttonsHelp[this.buttonsHelp.indexOf(butBack)].isClicked = 0;
+			}
+			break;
+		}
 	}
+
+	function checkClicks(mx, my) {
+		// Which buttons are depends on menu state
+		switch (stateMenu) {
+		case MenuState.MAIN:
+			for (var i=0; i < this.buttonsMain.length; i++) {
+				this.buttonsMain[i].clicked(mx, my); // set clicked buttons to say so, will do something in update()
+			}
+			break;
+		case MenuState.SINGLE:
+			// not yet implemented, goes straight to game
+			state = GameState.RESET;
+			break;
+		case MenuState.TWO:
+			// not yet implemented, goes straight to game
+			state = GameState.RESET;
+			break;
+		case MenuState.OPTIONS:
+			for (var i=0; i < this.buttonsOptions.length; i++) {
+				this.buttonsOptions[i].clicked(mx, my);
+			}
+			break;
+		case MenuState.HELP:
+			for (var i=0; i < this.buttonsHelp.length; i++) {
+				this.buttonsHelp[i].clicked(mx, my);
+			}
+			break;
+		}
+	}
+
+	function load() {
+		// Main menu buttons
+		this.buttonsMain.push(butSinglePlayer);
+		this.buttonsMain.push(butTwoPlayer);
+		this.buttonsMain.push(butOptions);
+		this.buttonsMain.push(butHelp);
+
+		// Single player menu
+
+		// Two player menu
+
+		// Options menu
+		this.buttonsOptions.push(butBack);
+
+		// Help menu
+		this.buttonsHelp.push(butBack);
+	}
+}
+
+// Handles a single button
+function button(newX, newY, newMsg) {
+	this.x = newX;
+	this.y = newY;
+	this.msg = newMsg;
+	this.width = 0;
+	this.height = 10;
+	this.isClicked = 0;
+	// In the future: color, image, etc
+
+	this.draw = draw;
+	this.clicked = clicked;
+
+	function draw(ctx) {
+		ctx.font = "10px Arial";
+		textDimensions = ctx.measureText(this.msg);
+
+		ctx.fillStyle = "#000";
+		ctx.fillRect(this.x, this.y, textDimensions.width, this.height);
+		ctx.stroke();
+
+		ctx.fillStyle = "#FFF";
+		ctx.fillText(this.msg, this.x, this.y+8);
+		ctx.stroke();
+
+		ctx.fillStyle = "#000";
+
+		// To avoid making a new context elsewhere,
+		// we'll set the height and width here
+		// The button will have to draw
+		// before it can be clicked anyways
+		this.width = textDimensions.width;
+	}
+
+	function clicked(newX, newY) {
+		if (newX > this.x && newX < this.x + this.width && newY > this.y && newY < this.y + this.height) {
+			this.isClicked = 1;
+		}
+	}
+}
+
+// Handles clicks straight from canvas element
+function clickEvent() {
+	// Handle offset canvas has from window
+	var c=document.getElementById("canvas");
+    var offset = getOffset(c);
+
+    var mx = event.clientX - offset.left;
+    var my = event.clientY - offset.top;
+
+    menuController.checkClicks(mx, my);
 }
 
 // Manages game resets, at beginning and at scores
@@ -421,4 +651,16 @@ function restartSound(sound) {
         // Fail silently but show in F12 developer tools console
         if(window.console && console.error("Error:" + e));
     }
+}
+
+// Get offset of canvas from window
+function getOffset( el ) {
+    var _x = 0;
+    var _y = 0;
+    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+        _x += el.offsetLeft - el.scrollLeft;
+        _y += el.offsetTop - el.scrollTop;
+        el = el.offsetParent;
+    }
+    return { top: _y, left: _x };
 }

@@ -1,11 +1,27 @@
 Just want to keep track of any changes I make here
 
+JSPong v1.3:
+	Since this ended up being so big, I changed it to 1.3
+	Tweaked collision settings
+	index.html - added onclick event
+	Added button object
+	Added more menu functionality
+		Buttons!
+		Multiple pages!
+		Way too much time spent!
+		Gazillions of lines of code!
+		As in more than the game!
+		Should probably work on that later!
+	Line count: 666
+
+	F**k github
+
 JSPong v1.2.2:
 	Fixed ball getting stuck at top and bottom
 	Fixed sounds playing right after another to work
 	Changed collision detection to hopefully be more accurate
 	Added point win and loss sounds (left side is player1)
-	Line count: 425
+	Line count: 426
 
 JSPong v1.2.1:
 	Got sound working
