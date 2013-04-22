@@ -1,5 +1,15 @@
 Just want to keep track of any changes I make here
 
+JSPong v1.3.1:
+	Fixed a typo
+	Split up the files
+		See index.html for where to put them when adding new
+	Added single player and two player menus
+	Also added single and two player gamestates, but aren't implemented yet
+		In the future might be a cutscene or something
+	Implemented arrays of sounds
+	Implemented multiple success levels
+
 JSPong v1.3:
 	Since this ended up being so big, I changed it to 1.3
 	Tweaked collision settings
@@ -12,7 +22,7 @@ JSPong v1.3:
 		Gazillions of lines of code!
 		As in more than the game!
 		Should probably work on that later!
-	FIxed a type (derp)
+	Fixed a typ (derp)
 	Line count: 666
 
 	F**k github
