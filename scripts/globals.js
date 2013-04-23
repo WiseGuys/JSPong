@@ -17,6 +17,10 @@ var HEIGHT = 720;
 var playing = 1; // of course we're playing!
 var players = 1;
 
+// For smart AI
+var ballHitY = 0;
+var ballHitX = 0;
+
 // Things related to score
 var score1 = 0;
 var score2 = 0;

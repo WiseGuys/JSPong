@@ -10,7 +10,7 @@ var firstPlayer = new player1(0, 0);
 var secondPlayer = new player2(0, 0);
 var menuController = new menu();
 var resetController = new reset();
-var albert = new ai("folo");
+var albert = new ai("smart");
 
 // Buttons
 var butSinglePlayer = new button(WIDTH / 2, HEIGHT / 2 - 100, "Single Player");

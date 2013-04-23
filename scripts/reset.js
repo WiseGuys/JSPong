@@ -14,6 +14,8 @@ function reset() {
 
 	function load() {
 		gameBall.load(WIDTH / 2, Math.floor(Math.random() * 401) + 160);
+		ballHitY = gameBall.y;
+		ballHitX = gameBall.x;
 		firstPlayer.load(PLAYER_BUFFER, HEIGHT / 2 - HEIGHT_PLAYER / 2); // Init left player
 		secondPlayer.load(WIDTH - PLAYER_BUFFER - WIDTH_PLAYER, HEIGHT / 2 - HEIGHT_PLAYER / 2); // Init right player
 	}

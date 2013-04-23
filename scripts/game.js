@@ -45,9 +45,11 @@ function Game() {
 				break;
 			case GameState.SINGLE:
 				state = GameState.RESET;
+				resetController.load();
 				break;
 			case GameState.TWO:
 				state = GameState.RESET;
+				resetController.load();
 				break;
 			case GameState.PLAY:
 				update();
@@ -107,6 +109,9 @@ function Game() {
 			if (gameBall.y > HEIGHT) {
 				gameBall.y = HEIGHT;
 			}
+
+			ballHitY = gameBall.y;
+			ballHitX = gameBall.x;
 		}
 
 		// Ball bounce off paddles
@@ -128,6 +133,9 @@ function Game() {
 				if (currentSound >= maxSound) {
 					currentSound = 0;
 				}
+				// for smart AI
+				ballHitY = gameBall.y;
+				ballHitX = gameBall.x;
 			}
 		}
 
@@ -146,6 +154,8 @@ function Game() {
 				if (currentSound >= maxSound) {
 					currentSound = 0;
 				}
+				ballHitY = gameBall.y;
+				ballHitX = gameBall.x;
 			}
 		}
 
