@@ -10,6 +10,7 @@ var firstPlayer = new player1(0, 0);
 var secondPlayer = new player2(0, 0);
 var menuController = new menu();
 var resetController = new reset();
+var albert = new ai("folo");
 
 // Buttons
 var butSinglePlayer = new button(WIDTH / 2, HEIGHT / 2 - 100, "Single Player");
@@ -20,9 +21,11 @@ var butHelp = new button(WIDTH / 2, HEIGHT / 2 + 200, "Help");
 var butBack = new button(WIDTH / 2, HEIGHT / 2, "Back");
 var butPlay = new button(WIDTH / 2, HEIGHT / 2, "Play");
 
+var checkMouse = new checkbox(WIDTH / 2, HEIGHT / 2 - 100, "Mouse control");
+
 // Levels
-var levelOne = new level("Brahms Waltz in Ab", "Help save this song from the bad guys", "Congrats, you win!", [C5, Ab4, Ab4, C5, C5, Ab4, Ab4, C5, Db5, Eb5, Db5, C5, Bb4, C5]);
-var levelTwo = new level("Dark Horse", "Not Nickelback", "Still not Nickelback", [C5, Bb4]);
+var levelOne = new level("Brahms Waltz in Ab", "Help save this song from the bad guys", "Congrats, you win!", [C5, Ab4, Ab4, C5, C5, Ab4, Ab4, C5, Db5, Eb5, Db5, C5, Bb4, C5], "folo");
+var levelTwo = new level("Dark Horse", "Not Nickelback", "Still not Nickelback", [C5, Bb4], "halfolo");
 
 var levels = [levelOne, levelTwo];
 
@@ -33,14 +36,9 @@ function loadGame() {
 
 // Handles clicks straight from canvas element
 function clickEvent() {
-	// Handle offset canvas has from window
-	var c=document.getElementById("canvas");
-    var offset = getOffset(c);
+    var mouseLoc = getMouse();
 
-    var mx = event.clientX - offset.left;
-    var my = event.clientY - offset.top;
-
-    menuController.checkClicks(mx, my);
+    menuController.checkClicks(mouseLoc._mx, mouseLoc._my);
 }
 
 // Prevent arrow key and WASD scrolling

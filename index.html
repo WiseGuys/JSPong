@@ -6,9 +6,11 @@
 		<script src="scripts/globals.js"></script>
 		<script src="scripts/menu.js"></script>
 		<script src="scripts/button.js"></script>
+		<script src="scripts/checkbox.js"></script>
 		<script src="scripts/entities.js"></script>
 		<script src="scripts/reset.js"></script>
 		<script src="scripts/level.js"></script>
+		<script src="scripts/ai.js"></script>
 		<script src="scripts/game.js"></script>
 		<!-- New scripts above here -->
 		<script src="scripts/main.js"></script>
@@ -18,7 +20,7 @@
 	<body onload="loadGame()">
 		<h1> Johann Sebastian Pong </h1>
 		<p> Play the classic Pong game that you know and love, but redesigned and more awesome. </p>
-		<canvas style="display:block; border:1px solid #000;" width="1280" height="720" id="canvas" onclick="clickEvent()"></canvas>
+		<canvas style="display:block; border:1px solid #000;" width="1280" height="720" id="canvas" onclick="clickEvent()" onmouseover="getMouse()"></canvas>
 		<p> Controls: Use WASD or the arrow keys to control your paddle and press SPACE to serve </p>
 		<p> Description: In a world where music was taken away, fight back with your Pong skills to get the music back!</p>
 		<p> Created by: Bill Derouin, Michael Bandemer, Indran Kamalanathan, Dillon Smith and Fletcher Groseclos</p>

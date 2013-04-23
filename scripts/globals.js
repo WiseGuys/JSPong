@@ -6,7 +6,7 @@
 
 // Constants
 var SPEED_PLAYER = 15;
-var WIDTH_PLAYER = 5;
+var WIDTH_PLAYER = 8;
 var HEIGHT_PLAYER = 50;
 var RADIUS_BALL = 5;
 var PLAYER_BUFFER = 50;
@@ -15,6 +15,7 @@ var WIDTH = 1280;
 var HEIGHT = 720;
 
 var playing = 1; // of course we're playing!
+var players = 1;
 
 // Things related to score
 var score1 = 0;
@@ -60,7 +61,6 @@ var Ab1a = new Audio("sounds/Ab1a.wav");
 var C5a = new Audio("sounds/C5a.wav");
 var C5b = new Audio("sounds/C5b.wav");
 var C5 = [C5a, C5b];
-console.log(C5);
 
 var Ab4a = new Audio("sounds/Ab4a.wav");
 var Ab4b = new Audio("sounds/Ab4b.wav");
@@ -81,7 +81,6 @@ var Bb4 = [Bb4a, Bb4b];
 var sounds = [C5, Ab4, Ab4, C5, C5, Ab4, Ab4, C5, Db5, Eb5, Db5, C5, Bb4, C5];
 var currentSound = 0;
 var maxSound = sounds.length;
-console.log(sounds);
 
 // Levels
 var curLevel = 0;
@@ -117,3 +116,20 @@ var Key = {
 
 window.addEventListener('keyup', function(event) { Key.onKeyup(event); }, false);
 window.addEventListener('keydown', function(event) { Key.onKeydown(event); }, false);
+
+// Options
+var mouseControl = 0;
+
+// Mouse position
+var mouseLoc = 0;
+function getMouse() {
+    // Handle offset canvas has from window
+    var c=document.getElementById("canvas");
+    var offset = getOffset(c);
+
+    var mx = event.clientX - offset.left;
+    var my = event.clientY - offset.top;
+
+    mouseLoc = { _mx: mx, _my: my };
+    return mouseLoc;
+}

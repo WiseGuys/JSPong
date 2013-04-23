@@ -139,10 +139,12 @@ function menu() {
 			if(this.buttonsMain[this.buttonsMain.indexOf(butSinglePlayer)].isClicked) {
 				// Go to single player menu
 				stateMenu = MenuState.SINGLE;
+				players = 1;
 				this.buttonsMain[this.buttonsMain.indexOf(butSinglePlayer)].isClicked = 0;
 			} else if(this.buttonsMain[this.buttonsMain.indexOf(butTwoPlayer)].isClicked) {
 				// Go to two player menu
 				stateMenu = MenuState.TWO;
+				players = 2;
 				this.buttonsMain[this.buttonsMain.indexOf(butTwoPlayer)].isClicked = 0;
 			} else if(this.buttonsMain[this.buttonsMain.indexOf(butOptions)].isClicked) {
 				// Go to options menu
@@ -173,6 +175,11 @@ function menu() {
 				// Go back to main menu
 				stateMenu = MenuState.MAIN;
 				this.buttonsOptions[this.buttonsOptions.indexOf(butBack)].isClicked = 0;
+			} else if(this.buttonsOptions[this.buttonsOptions.indexOf(checkMouse)].isClicked) {
+				// Set mouse control to active
+				mouseControl = !mouseControl;
+				this.buttonsOptions[this.buttonsOptions.indexOf(checkMouse)].isChecked = !this.buttonsOptions[this.buttonsOptions.indexOf(checkMouse)].isChecked;
+				this.buttonsOptions[this.buttonsOptions.indexOf(checkMouse)].isClicked = 0;
 			}
 			break;
 		case MenuState.HELP:
@@ -230,6 +237,7 @@ function menu() {
 		this.buttonsTwo.push(butPlay);
 
 		// Options menu
+		this.buttonsOptions.push(checkMouse);
 		this.buttonsOptions.push(butBack);
 
 		// Help menu

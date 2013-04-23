@@ -17,6 +17,8 @@ function Game() {
 
 		menuController.load();
 
+		albert.load();
+
 		this.begin();
 	}
 
@@ -27,7 +29,7 @@ function Game() {
 	}
 
 	function main() {
-
+		console.log(mouseLoc);
 		if (playing) {
 			// Gamestate switch
 			switch(state) {
@@ -63,13 +65,30 @@ function Game() {
 		if (Key.isDown(Key.W) && firstPlayer.y > 0) firstPlayer.y -= SPEED_PLAYER;
 		if (Key.isDown(Key.S) && firstPlayer.y < HEIGHT-HEIGHT_PLAYER) firstPlayer.y += SPEED_PLAYER;
 
+		// Mouse control for Player 1
+		if (mouseControl) {
+			var middle = firstPlayer.y + HEIGHT_PLAYER / 2;
+			if (mouseLoc._my > middle) {
+				if (Math.abs(middle - mouseLoc._my)) {
+					firstPlayer.y += Math.abs(middle - mouseLoc._my);
+				} else {
+					firstPlayer.y += SPEED_PLAYER;
+				}
+			}
+			else if (mouseLoc._my < middle) firstPlayer.y -= SPEED_PLAYER;
+		}
+
 		// Player 2
-		if (Key.isDown(Key.UP) && secondPlayer.y > 0) secondPlayer.y -= SPEED_PLAYER;
-		if (Key.isDown(Key.DOWN) && secondPlayer.y < HEIGHT-HEIGHT_PLAYER) secondPlayer.y += SPEED_PLAYER;
+		if (players == 2) {
+			if (Key.isDown(Key.UP) && secondPlayer.y > 0) secondPlayer.y -= SPEED_PLAYER;
+			if (Key.isDown(Key.DOWN) && secondPlayer.y < HEIGHT-HEIGHT_PLAYER) secondPlayer.y += SPEED_PLAYER;
+		} else {
+			albert.update();
+		}
 
 		// Ball movement
-		if (gameBall.yVel > 4) {
-			gameBall.yVel = 4;
+		if (gameBall.yVel > 6) {
+			gameBall.yVel = 6;
 		}
 		gameBall.x += gameBall.xVel;
 		gameBall.y += gameBall.yVel;
@@ -98,7 +117,7 @@ function Game() {
 		}
 
 		// Ball bounce off paddles
-		if (gameBall.x >= WIDTH - PLAYER_BUFFER - WIDTH_PLAYER && gameBall.x <= WIDTH - PLAYER_BUFFER + WIDTH_PLAYER) {
+		if (gameBall.x >= WIDTH - PLAYER_BUFFER - WIDTH_PLAYER - gameBall.xVel && gameBall.x <= WIDTH - PLAYER_BUFFER + WIDTH_PLAYER + gameBall.xVel) {
 			// On right side
 			// Need to improve this check later
 			// It skips out when going fast
@@ -119,7 +138,7 @@ function Game() {
 			}
 		}
 
-		if (gameBall.x <= PLAYER_BUFFER + WIDTH_PLAYER && gameBall.x >= PLAYER_BUFFER - WIDTH_PLAYER) {
+		if (gameBall.x <= PLAYER_BUFFER + WIDTH_PLAYER - gameBall.xVel && gameBall.x >= PLAYER_BUFFER - WIDTH_PLAYER + gameBall.xVel) { // xVel is neg moving to left
 			// On left side
 			if (gameBall.y >= firstPlayer.y && gameBall.y <= firstPlayer.y + HEIGHT_PLAYER) {
 				gameBall.xVel *= -1;

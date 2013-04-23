@@ -9,6 +9,9 @@ JSPong v1.3.1:
 		In the future might be a cutscene or something
 	Implemented arrays of sounds
 	Implemented multiple success levels
+	Fixed collision
+	Added AI
+	Added a checkbox class
 
 JSPong v1.3:
 	Since this ended up being so big, I changed it to 1.3
