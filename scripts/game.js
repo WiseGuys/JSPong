@@ -68,9 +68,16 @@ function Game() {
 
 		// Mouse control for Player 1
 		if (mouseControl) {
+			//firstPlayer.y = mouseLoc._my;
 			var middle = firstPlayer.y + HEIGHT_PLAYER / 2;
-			if (mouseLoc._my > middle) firstPlayer.y += SPEED_PLAYER;
-			else if (mouseLoc._my < middle) firstPlayer.y -= SPEED_PLAYER;
+			if (Math.abs(middle - mouseLoc._my) < SPEED_PLAYER) {
+				if (mouseLoc._my > middle) firstPlayer.y += Math.abs(middle - mouseLoc._my);
+				else if (mouseLoc._my < middle) firstPlayer.y -= Math.abs(middle - mouseLoc._my);
+			} else if (mouseLoc._my > middle) { 
+				firstPlayer.y += SPEED_PLAYER;
+			} else if (mouseLoc._my < middle) {
+				firstPlayer.y -= SPEED_PLAYER;
+			}
 		}
 
 		// Player 2
@@ -91,14 +98,28 @@ function Game() {
 		// Ball bounce off walls
 		if (gameBall.y <= 0 || gameBall.y > HEIGHT) {
 			gameBall.yVel *= -1;
+			// Only one sound playing at a time
+			if (currentSound > 0) {
+				if (isPlaying(sounds[currentSound-1][successLevel])) {
+					sounds[currentSound-1][successLevel].volume = 0.0;
+				}
+			} else {
+				if (isPlaying(sounds[maxSound-1][successLevel])) {
+					sounds[maxSound-1][successLevel].volume = 0.0;
+				}
+			}
 			if (isPlaying(sounds[currentSound][successLevel])) {
 				restartSound(sounds[currentSound][successLevel]);
 			} else {
+				sounds[currentSound][successLevel].volume = 1.0;
 				sounds[currentSound][successLevel].play();
 			}
+			
 			currentSound += 1;
 			if (currentSound >= maxSound) {
 				currentSound = 0;
+				if (players == 1) score += 1;
+				resetController.manageSuccess();
 			}
 
 			// Make sure it's within the bounds
@@ -124,14 +145,28 @@ function Game() {
 				gameBall.xVel *= -1;
 				gameBall.xVel -= 1.5;
 				gameBall.yVel += (gameBall.y - (secondPlayer.y + HEIGHT_PLAYER) / 2) / 40;
+				if (currentSound > 0) {
+					if (isPlaying(sounds[currentSound-1][successLevel])) {
+						sounds[currentSound-1][successLevel].volume = 0.0;
+					}
+				} else {
+					if (isPlaying(sounds[maxSound-1][successLevel])) {
+						sounds[maxSound-1][successLevel].volume = 0.0;
+					}
+				}
 				if (isPlaying(sounds[currentSound][successLevel])) {
 					restartSound(sounds[currentSound][successLevel]);
 				} else {
+					sounds[currentSound][successLevel].volume = 1.0;
 					sounds[currentSound][successLevel].play();
 				}
+				
 				currentSound += 1;
 				if (currentSound >= maxSound) {
 					currentSound = 0;
+					// C-C-C-Combo breaker
+					if (players == 1) score1 += 1;
+					resetController.manageSuccess();
 				}
 				// for smart AI
 				ballHitY = gameBall.y;
@@ -145,14 +180,28 @@ function Game() {
 				gameBall.xVel *= -1;
 				gameBall.xVel += 1.5;
 				gameBall.yVel = (gameBall.y - (firstPlayer.y + HEIGHT_PLAYER) / 2) / 40;
+				if (currentSound > 0) {
+					if (isPlaying(sounds[currentSound-1][successLevel])) {
+						sounds[currentSound-1][successLevel].volume = 0.0;
+					}
+				} else {
+					if (isPlaying(sounds[maxSound-1][successLevel])) {
+						sounds[maxSound-1][successLevel].volume = 0.0;
+					}
+				}
 				if (isPlaying(sounds[currentSound][successLevel])) {
 					restartSound(sounds[currentSound][successLevel]);
 				} else {
+					sounds[currentSound][successLevel].volume = 1.0;
 					sounds[currentSound][successLevel].play();
 				}
+				
 				currentSound += 1;
 				if (currentSound >= maxSound) {
 					currentSound = 0;
+					// C-C-C-Combo breaker
+					if (players == 1) score1 += 1;
+					resetController.manageSuccess();
 				}
 				ballHitY = gameBall.y;
 				ballHitX = gameBall.x;
@@ -169,10 +218,6 @@ function Game() {
 			twoScored = 0;
 			scoreSound.play();
 			state = GameState.RESET;
-			successLevel += 1;
-			if (successLevel > 1) {
-				successLevel = 1;
-			}
 			resetController.load();
 		}
 
@@ -181,10 +226,6 @@ function Game() {
 			twoScored = 1;
 			pointLostSound.play();
 			state = GameState.RESET;
-			successLevel -= 1;
-			if (successLevel < 0) {
-				successLevel = 0;
-			}
 			resetController.load();
 		}
 	}

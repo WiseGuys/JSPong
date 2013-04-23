@@ -13,15 +13,17 @@ var resetController = new reset();
 var albert = new ai("smart");
 
 // Buttons
-var butSinglePlayer = new button(WIDTH / 2, HEIGHT / 2 - 100, "Single Player");
-var butTwoPlayer = new button(WIDTH / 2, HEIGHT / 2, "Two Player");
-var butOptions = new button(WIDTH / 2, HEIGHT  / 2 + 100, "Options");
-var butHelp = new button(WIDTH / 2, HEIGHT / 2 + 200, "Help");
+var butSinglePlayer = new button("Single Player");
+var butTwoPlayer = new button("Two Player");
+var butOptions = new button("Options");
+var butHelp = new button("Help");
 
-var butBack = new button(WIDTH / 2, HEIGHT / 2, "Back");
-var butPlay = new button(WIDTH / 2, HEIGHT / 2, "Play");
+var butBackOptions = new button("Back");
+var butBackHelp = new button("Back");
+var butPlaySingle = new button("Play");
+var butPlayTwo = new button("Play");
 
-var checkMouse = new checkbox(WIDTH / 2, HEIGHT / 2 - 100, "Mouse control");
+var checkMouse = new checkbox("Mouse control");
 
 // Levels
 var levelOne = new level("Brahms Waltz in Ab", "Help save this song from the bad guys", "Congrats, you win!", [C5, Ab4, Ab4, C5, C5, Ab4, Ab4, C5, Db5, Eb5, Db5, C5, Bb4, C5], "folo");

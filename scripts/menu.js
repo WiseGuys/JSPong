@@ -157,36 +157,37 @@ function menu() {
 			}
 			break;
 		case MenuState.SINGLE:
-			if (this.buttonsSingle[this.buttonsSingle.indexOf(butPlay)].isClicked) {
+			if (this.buttonsSingle[this.buttonsSingle.indexOf(butPlaySingle)].isClicked) {
 				// Goto game!
 				state = GameState.SINGLE;
-				this.buttonsSingle[this.buttonsSingle.indexOf(butPlay)].isClicked = 0;
+				this.buttonsSingle[this.buttonsSingle.indexOf(butPlaySingle)].isClicked = 0;
 			}
 			break;
 		case MenuState.TWO:
-			if (this.buttonsTwo[this.buttonsTwo.indexOf(butPlay)].isClicked) {
+			if (this.buttonsTwo[this.buttonsTwo.indexOf(butPlayTwo)].isClicked) {
 				// Goto game!
 				state = GameState.TWO;
-				this.buttonsTwo[this.buttonsTwo.indexOf(butPlay)].isClicked = 0;
+				this.buttonsTwo[this.buttonsTwo.indexOf(butPlayTwo)].isClicked = 0;
 			}
 			break;
 		case MenuState.OPTIONS:
-			if(this.buttonsOptions[this.buttonsOptions.indexOf(butBack)].isClicked) {
+			if(this.buttonsOptions[this.buttonsOptions.indexOf(butBackOptions)].isClicked) {
 				// Go back to main menu
 				stateMenu = MenuState.MAIN;
-				this.buttonsOptions[this.buttonsOptions.indexOf(butBack)].isClicked = 0;
+				this.buttonsOptions[this.buttonsOptions.indexOf(butBackOptions)].isClicked = 0;
 			} else if(this.buttonsOptions[this.buttonsOptions.indexOf(checkMouse)].isClicked) {
 				// Set mouse control to active
 				mouseControl = !mouseControl;
+				setCookie("mouseControl", mouseControl, 30);
 				this.buttonsOptions[this.buttonsOptions.indexOf(checkMouse)].isChecked = !this.buttonsOptions[this.buttonsOptions.indexOf(checkMouse)].isChecked;
 				this.buttonsOptions[this.buttonsOptions.indexOf(checkMouse)].isClicked = 0;
 			}
 			break;
 		case MenuState.HELP:
-			if(this.buttonsHelp[this.buttonsHelp.indexOf(butBack)].isClicked) {
+			if(this.buttonsHelp[this.buttonsHelp.indexOf(butBackHelp)].isClicked) {
 				// Go back to main menu
 				stateMenu = MenuState.MAIN;
-				this.buttonsHelp[this.buttonsHelp.indexOf(butBack)].isClicked = 0;
+				this.buttonsHelp[this.buttonsHelp.indexOf(butBackHelp)].isClicked = 0;
 			}
 			break;
 		}
@@ -230,17 +231,44 @@ function menu() {
 		this.buttonsMain.push(butOptions);
 		this.buttonsMain.push(butHelp);
 
+		for (var i=0; i<this.buttonsMain.length; i++) {
+			this.buttonsMain[i].load(WIDTH / 2 - 50 + (i % 2) * 100, Math.floor(i / 2) * 100 + 300);
+		}
+
 		// Single player menu
-		this.buttonsSingle.push(butPlay);
+		this.buttonsSingle.push(butPlaySingle);
+
+		for (var i=0; i<this.buttonsSingle.length; i++) {
+			this.buttonsSingle[i].load(WIDTH / 2 - 100, i * 100 + 300);
+		}
 
 		// Two player menu
-		this.buttonsTwo.push(butPlay);
+		this.buttonsTwo.push(butPlayTwo);
+
+		for (var i=0; i<this.buttonsTwo.length; i++) {
+			this.buttonsTwo[i].load(WIDTH / 2 - 100, i * 100 + 300);
+		}
 
 		// Options menu
 		this.buttonsOptions.push(checkMouse);
-		this.buttonsOptions.push(butBack);
+		this.buttonsOptions.push(butBackOptions);
+
+		for (var i=0; i<this.buttonsOptions.length; i++) {
+			this.buttonsOptions[i].load(WIDTH / 2 - 100, i * 100 + 300);
+		}
+
+		// Load options
+		mouseControl = getCookie("mouseControl");
+
+		console.log(mouseControl);
+
+		this.buttonsOptions[0].isChecked = mouseControl;
 
 		// Help menu
-		this.buttonsHelp.push(butBack);
+		this.buttonsHelp.push(butBackHelp);
+
+		for (var i=0; i<this.buttonsHelp.length; i++) {
+			this.buttonsHelp[i].load(WIDTH / 2 - 100, i * 100 + 300);
+		}
 	}
 }

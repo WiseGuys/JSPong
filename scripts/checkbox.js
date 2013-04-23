@@ -2,9 +2,9 @@
 // Bill Derouin
 // Object for a single checkbox
 // Similar to button
-function checkbox(newX, newY, newText) {
-	this.x = newX;
-	this.y = newY;
+function checkbox(newText) {
+	this.x = 0;
+	this.y = 0;
 	this.text = newText;
 	this.height = 10; // square box, so same for width
 	this.isChecked = 0;
@@ -12,6 +12,12 @@ function checkbox(newX, newY, newText) {
 
 	this.draw = draw;
 	this.clicked = clicked;
+	this.load = load;
+
+	function load(newX, newY) {
+		this.x = newX;
+		this.y = newY;
+	}
 
 	function draw(ctx) {
 		// The box

@@ -11,6 +11,7 @@ function reset() {
 	this.load = load;
 	this.draw = draw;
 	this.update = update;
+	this.manageSuccess = manageSuccess;
 
 	function load() {
 		gameBall.load(WIDTH / 2, Math.floor(Math.random() * 401) + 160);
@@ -23,6 +24,8 @@ function reset() {
 	function update() {
 		// Quit?
 		if (Key.isDown(Key.ESC)) playing = 0;
+
+		this.manageSuccess();
 
 		// Start game
 		if (Key.isDown(Key.SPACE)) {
@@ -37,6 +40,9 @@ function reset() {
 				gameBall.xVel *= -1;
 				gameBall.yVel *= -1;
 			}
+
+			// Restart current sound for combo
+			currentSound = 0;
 		}
 	}
 
@@ -71,5 +77,12 @@ function reset() {
 
     	// Draw it
     	ctx.stroke();
+	}
+
+	function manageSuccess() {
+		// Manage success level
+		successLevel = score1 - score2;
+		if (successLevel > 1) successLevel = 1;
+		else if (successLevel < 0) successLevel = 0;
 	}
 }
