@@ -11,7 +11,8 @@ function button(newX, newY, newMsg) {
 	this.y = newY;
 	this.msg = newMsg;
 	this.width = 0;
-	this.height = 10;
+	this.padding = 5;
+	this.height = 10 + this.padding * 2; // 10 font + 5 either side padding
 	this.isClicked = 0;
 	// In the future: color, image, etc
 
@@ -23,11 +24,11 @@ function button(newX, newY, newMsg) {
 		textDimensions = ctx.measureText(this.msg);
 
 		ctx.fillStyle = "#000";
-		ctx.fillRect(this.x, this.y, textDimensions.width, this.height);
+		ctx.fillRect(this.x - this.padding, this.y - this.padding, textDimensions.width + this.padding*2, this.height + this.padding);
 		ctx.stroke();
 
 		ctx.fillStyle = "#FFF";
-		ctx.fillText(this.msg, this.x, this.y+8);
+		ctx.fillText(this.msg, this.x, this.y+this.padding*2);
 		ctx.stroke();
 
 		ctx.fillStyle = "#000";
@@ -36,11 +37,11 @@ function button(newX, newY, newMsg) {
 		// we'll set the height and width here
 		// The button will have to draw
 		// before it can be clicked anyways
-		this.width = textDimensions.width;
+		this.width = textDimensions.width + 10; // 5 either side padding
 	}
 
 	function clicked(newX, newY) {
-		if (newX > this.x && newX < this.x + this.width && newY > this.y && newY < this.y + this.height) {
+		if (newX > this.x - this.padding && newX < this.x + this.width + this.padding && newY > this.y - this.padding && newY < this.y + this.height + this.padding) {
 			this.isClicked = 1;
 		}
 	}

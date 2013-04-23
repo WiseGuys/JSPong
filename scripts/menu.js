@@ -23,7 +23,7 @@ function menu() {
 
 	// Help menu
 	this.helpMsg = "Help";
-	this.helpText = "Figure it out";
+	this.helpText = "Controls: Use WASD or the arrow keys to control your paddle and press SPACE to serve";
 	this.buttonsHelp = [];
 
 	// Single player menu
@@ -87,8 +87,8 @@ function menu() {
 
 			// Message
 			ctx.font="15px Arial";
-			textDimensions = ctx.measureText(this.this.twoText);
-			ctx.fillText(this.this.twoText,WIDTH / 2 - textDimensions.width / 2, 200);
+			textDimensions = ctx.measureText(this.twoText);
+			ctx.fillText(this.twoText,WIDTH / 2 - textDimensions.width / 2, 200);
 
 			// Buttons
 			for (var i=0; i < this.buttonsTwo.length; i++) {
@@ -118,12 +118,12 @@ function menu() {
 			ctx.font = "15px Arial";
 			textDimensions = ctx.measureText(this.helpText);
 			ctx.fillText(this.helpText,WIDTH / 2 - textDimensions.width / 2, 200);
-			break;
 
 			// Buttons
 			for (var i=0; i < this.buttonsHelp.length; i++) {
 				this.buttonsHelp[i].draw(ctx);
 			}
+			break;
 		}
 
 		// Draw it

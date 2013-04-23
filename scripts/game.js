@@ -29,7 +29,6 @@ function Game() {
 	}
 
 	function main() {
-		console.log(mouseLoc);
 		if (playing) {
 			// Gamestate switch
 			switch(state) {
