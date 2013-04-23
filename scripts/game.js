@@ -68,13 +68,7 @@ function Game() {
 		// Mouse control for Player 1
 		if (mouseControl) {
 			var middle = firstPlayer.y + HEIGHT_PLAYER / 2;
-			if (mouseLoc._my > middle) {
-				if (Math.abs(middle - mouseLoc._my)) {
-					firstPlayer.y += Math.abs(middle - mouseLoc._my);
-				} else {
-					firstPlayer.y += SPEED_PLAYER;
-				}
-			}
+			if (mouseLoc._my > middle) firstPlayer.y += SPEED_PLAYER;
 			else if (mouseLoc._my < middle) firstPlayer.y -= SPEED_PLAYER;
 		}
 
