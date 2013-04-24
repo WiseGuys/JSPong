@@ -86,6 +86,17 @@ var sounds = [C5, Ab4, Ab4, C5, C5, Ab4, Ab4, C5, Db5, Eb5, Db5, C5, Bb4, C5];
 var currentSound = 0;
 var maxSound = sounds.length;
 
+// Background music
+var musicOneA = new Audio("sounds/bg1a.wav");
+musicOneA.volume = 0.3;
+musicOneA.loop = true;
+var musicOneB = new Audio("sounds/bg1b.wav");
+musicOneB.volume = 0.3;
+musicOneB.loop = true;
+var musicOne = [musicOneA, musicOneB];
+
+console.log(musicOne);
+
 // Levels
 var curLevel = 0;
 var successLevel = 0;

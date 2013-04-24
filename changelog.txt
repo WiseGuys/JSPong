@@ -1,16 +1,7 @@
 Just want to keep track of any changes I make here
-
-JSPong v.1.3.2:
-	Added smart AI
-	Made button location controlled by menu controller
-		Had to make duplicate back and play buttons b/c of this
-	Made buttons even better
-		Uniform width
-		Centered text
-	Moved successLevel management to reset controller
-	Added combo breaker points (single player only)
-	Sounds only play one at a time now
-	Cookies implemented for options
+JSPong v1.4:
+	Added a pause menu
+	Added background music that corresponds to the success level
 
 JSPong v1.3.1:
 	Fixed a typo

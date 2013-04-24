@@ -7,7 +7,7 @@
 // Text
 // Victory screen
 
-function level(sName, sText, sWin, aSounds, pers) {
+function level(sName, sText, sWin, aSounds, pers, bgtrack) {
 	// Vars
 	this.name = sName;
 	this.text = sText;
@@ -16,4 +16,5 @@ function level(sName, sText, sWin, aSounds, pers) {
 	this.curSound = 0;
 	this.maxSounds = aSounds.length;
 	this.aiPersonality = pers;
+	this.bgmusic = bgtrack;
 }

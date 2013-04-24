@@ -9,6 +9,7 @@ function Game() {
 	this.begin = begin;
 	this.update = update;
 	this.draw = draw;
+	this.pauseMenu = pauseMenu;
 
 	function load() {
 		gameBall.load(WIDTH/2, HEIGHT/2); // Init ball
@@ -44,16 +45,21 @@ function Game() {
 				resetController.draw();
 				break;
 			case GameState.SINGLE:
+				musicOne[successLevel].play();
 				state = GameState.RESET;
 				resetController.load();
 				break;
 			case GameState.TWO:
+				musicOne[successLevel].play();
 				state = GameState.RESET;
 				resetController.load();
 				break;
 			case GameState.PLAY:
 				update();
 				draw();
+				break;
+			case GameState.PAUSE:
+				pauseMenu();
 				break;
 			}
 		} else {
@@ -118,7 +124,13 @@ function Game() {
 			currentSound += 1;
 			if (currentSound >= maxSound) {
 				currentSound = 0;
-				if (players == 1) score += 1;
+				if (players == 1) score1 += 1;
+				var curTime = musicOne[successLevel].currentTime;
+				if (successLevel < 1) {
+					musicOne[successLevel].pause();
+					musicOne[successLevel+1].currentTime = curTime;
+					musicOne[successLevel+1].play();
+				}
 				resetController.manageSuccess();
 			}
 
@@ -166,6 +178,12 @@ function Game() {
 					currentSound = 0;
 					// C-C-C-Combo breaker
 					if (players == 1) score1 += 1;
+					var curTime = musicOne[successLevel].currentTime;
+					if (successLevel < 1) {
+						musicOne[successLevel].pause();
+						musicOne[successLevel+1].currentTime = curTime;
+						musicOne[successLevel+1].play();
+					}
 					resetController.manageSuccess();
 				}
 				// for smart AI
@@ -201,6 +219,13 @@ function Game() {
 					currentSound = 0;
 					// C-C-C-Combo breaker
 					if (players == 1) score1 += 1;
+					// BG music level up
+					var curTime = musicOne[successLevel].currentTime;
+					if (successLevel < 1) {
+						musicOne[successLevel].pause();
+						musicOne[successLevel+1].currentTime = curTime;
+						musicOne[successLevel+1].play();
+					}
 					resetController.manageSuccess();
 				}
 				ballHitY = gameBall.y;
@@ -209,15 +234,23 @@ function Game() {
 		}
 
 		// Quit?
-		if (Key.isDown(Key.ESC)) playing = 0;		
+		if (Key.isDown(Key.ESC)) state = GameState.PAUSE;
 
 		// Puntos
 		if (gameBall.x > WIDTH) {
 			// Point player1 (good)
 			score1 += 1;
-			twoScored = 0;
+			twoScored = 0;			
 			scoreSound.play();
 			state = GameState.RESET;
+
+			// BG music level up
+			var curTime = musicOne[successLevel].currentTime;
+			if (successLevel < 1) {
+				musicOne[successLevel].pause();
+				musicOne[successLevel+1].currentTime = curTime;
+				musicOne[successLevel+1].play();
+			}
 			resetController.load();
 		}
 
@@ -226,6 +259,14 @@ function Game() {
 			twoScored = 1;
 			pointLostSound.play();
 			state = GameState.RESET;
+
+			// BG music level up
+			var curTime = musicOne[successLevel].currentTime;
+			if (successLevel > 0) {
+				musicOne[successLevel].pause();
+				musicOne[successLevel-1].currentTime = curTime;
+				musicOne[successLevel-1].play();
+			}
 			resetController.load();
 		}
 	}
@@ -256,5 +297,23 @@ function Game() {
 
     	// Draw it
     	ctx.stroke();
+    }
+
+    function pauseMenu() {
+    	var c=document.getElementById("canvas");
+    	var ctx=c.getContext("2d");
+    	ctx.fillStyle="#000";
+
+    	// Box in middle
+    	ctx.fillRect(WIDTH / 4, HEIGHT / 4, WIDTH / 2, HEIGHT / 2);
+
+    	// Text
+    	ctx.fillStyle = "#FFF";
+    	ctx.font = "40px Arial";
+    	var pauseText = "PAUSED, hit space to continue";
+    	var dimensions = ctx.measureText(pauseText);
+    	ctx.fillText(pauseText, WIDTH / 2 - dimensions.width / 2, HEIGHT / 2);
+
+    	if (Key.isDown(Key.SPACE)) state = GameState.PLAY;
     }
 }
