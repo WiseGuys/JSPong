@@ -31,6 +31,7 @@ function Game() {
 
 	function main() {
 		if (playing) {
+			console.log(state);
 			// Gamestate switch
 			switch(state) {
 			case GameState.LOAD:
@@ -382,6 +383,16 @@ function Game() {
     	var dimensions = ctx.measureText(pauseText);
     	ctx.fillText(pauseText, WIDTH / 2 - dimensions.width / 2, HEIGHT / 2);
 
+    	// More text
+    	ctx.font = "20px Arial";
+    	var pauseText = "Hit Enter to go back to the main menu";
+    	var dimensions = ctx.measureText(pauseText);
+    	ctx.fillText(pauseText, WIDTH / 2 - dimensions.width / 2, HEIGHT / 2 + 150);
+
     	if (Key.isDown(Key.SPACE)) state = GameState.PLAY;
+    	if (Key.isDown(Key.ENTER)) {
+    		state = GameState.MENU;
+    		stateMenu = MenuState.MAIN;
+    	}
     }
 }
