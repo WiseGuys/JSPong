@@ -100,6 +100,7 @@ console.log(musicOne);
 // Levels
 var curLevel = 0;
 var successLevel = 0;
+var maxLevel = 0;
 
 // Key controller stuff
 var Key = {

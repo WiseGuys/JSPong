@@ -26,7 +26,7 @@ var butPlayTwo = new button("Play");
 var checkMouse = new checkbox("Mouse control");
 
 // Levels
-var levelOne = new level("Brahms Waltz in Ab", "Help save this song from the bad guys", "Congrats, you win!", [C5, Ab4, Ab4, C5, C5, Ab4, Ab4, C5, Db5, Eb5, Db5, C5, Bb4, C5], "folo");
+var levelOne = new level("Brahms Waltz in Ab", "Help save this song from the bad guys", "Congrats, you win!", [C5, Ab4, Ab4, C5, C5, Ab4, Ab4, C5, Db5, Eb5, Db5, C5, Bb4, C5], "folo", musicOne, 1);
 var levelTwo = new level("Dark Horse", "Not Nickelback", "Still not Nickelback", [C5, Bb4], "halfolo");
 
 var levels = [levelOne, levelTwo];

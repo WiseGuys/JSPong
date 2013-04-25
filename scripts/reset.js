@@ -84,5 +84,10 @@ function reset() {
 		successLevel = score1 - score2;
 		if (successLevel > 1) successLevel = 1;
 		else if (successLevel < 0) successLevel = 0;
+
+		if (successLevel >= maxLevel) {
+			// Beat the level!
+			state = GameState.GAMEOVER;
+		}
 	}
 }

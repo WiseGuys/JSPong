@@ -46,8 +46,48 @@ function Game() {
 				break;
 			case GameState.SINGLE:
 				musicOne[successLevel].play();
-				state = GameState.RESET;
-				resetController.load();
+
+				// Single player menu screen
+				// Menu controller single player would be level select
+
+				// Load level
+				sounds = levels[curLevel].sounds;
+				maxSound = levels[curLevel].maxSounds;
+				currentSound = 0;
+				albert.setPers(levels[curLevel].aiPersonality);
+				maxLevel = levels[curLevel].goal;
+
+				// Reset score
+				successLevel = 0;
+				score1 = 0;
+				score2 = 0;
+
+				// Draw page
+				var c = document.getElementById("canvas");
+				var ctx = c.getContext("2d");
+				canvas.width = canvas.width;
+				ctx.fillStyle = "#000";
+				
+				// Title
+				ctx.font="30px Arial";
+				var textDimensions = ctx.measureText(levels[curLevel].name);
+				ctx.fillText(levels[curLevel].name,WIDTH / 2 - textDimensions.width / 2, 60);
+
+				// Message
+				ctx.font="15px Arial";
+				textDimensions = ctx.measureText(levels[curLevel].text);
+				ctx.fillText(levels[curLevel].text,WIDTH / 2 - textDimensions.width / 2, 200);
+
+				// Press Enter to play
+				ctx.font="15px Arial";
+				textDimensions = ctx.measureText("Press Enter to play");
+				ctx.fillText("Press Enter to play",WIDTH / 2 - textDimensions.width / 2, 300);
+
+				// Go to game
+				if (Key.isDown(Key.ENTER)) {
+					state = GameState.RESET;
+					resetController.load();
+				}
 				break;
 			case GameState.TWO:
 				musicOne[successLevel].play();
@@ -60,6 +100,34 @@ function Game() {
 				break;
 			case GameState.PAUSE:
 				pauseMenu();
+				break;
+			case GameState.GAMEOVER:
+				// Success!
+				// Draw page
+				var c = document.getElementById("canvas");
+				var ctx = c.getContext("2d");
+				canvas.width = canvas.width;
+				ctx.fillStyle = "#000";
+				
+				// Title
+				ctx.font="30px Arial";
+				var textDimensions = ctx.measureText(levels[curLevel].name);
+				ctx.fillText(levels[curLevel].name,WIDTH / 2 - textDimensions.width / 2, 60);
+
+				// Message
+				ctx.font="15px Arial";
+				textDimensions = ctx.measureText(levels[curLevel].victory);
+				ctx.fillText(levels[curLevel].victory,WIDTH / 2 - textDimensions.width / 2, 200);
+
+				// Continue
+				ctx.font="15px Arial";
+				textDimensions = ctx.measureText("Press Space to continue");
+				ctx.fillText("Press Space to continue",WIDTH / 2 - textDimensions.width / 2, 300);
+
+				if (Key.isDown(Key.SPACE)) {
+					state = GameState.SINGLE;
+					curLevel += 1;
+				}
 				break;
 			}
 		} else {

@@ -15,11 +15,12 @@ function ai(pers) {
 
 	this.load = load;
 	this.update = update;
+	this.setPers = setPers;
 
 	function load() {
 		switch (this.personality) {
 		case "folo":
-			this.speed = 3;
+			this.speed = 0;
 			break;
 		case "halfolo":
 			this.speed = 6;
@@ -28,6 +29,11 @@ function ai(pers) {
 			this.speed = 10;
 			break;
 		}
+	}
+
+	function setPers(newPers) {
+		this.personality = newPers;
+		this.load();
 	}
 
 	function update() {
