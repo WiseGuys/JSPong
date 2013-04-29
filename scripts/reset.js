@@ -47,8 +47,6 @@ function reset() {
 	}
 
 	function draw() {
-		var c=document.getElementById("canvas");
-    	var ctx=c.getContext("2d");
     	canvas.width = canvas.width; // clear screen
     	ctx.fillStyle="#000";
 
@@ -67,8 +65,12 @@ function reset() {
 
     	// Scores
     	ctx.font="30px Arial";
-    	ctx.fillText(score1,600,25);
-    	ctx.fillText(score2,660,25);
+    	if (players == 1) {
+    		ctx.fillText(successLevel, WIDTH / 2, 25);
+    	} else {
+    		ctx.fillText(score1,600,25);
+    		ctx.fillText(score2,660,25);
+		}
 
     	// Instructions
     	ctx.font="15px Arial";
@@ -81,14 +83,19 @@ function reset() {
 
 	function manageSuccess() {
 		if (players == 1) {
-			// Manage success level
-			successLevel = score1 - score2;
-			if (successLevel > 1) successLevel = 1;
-			else if (successLevel < 0) successLevel = 0;
-
-			if (successLevel >= maxLevel) {
+			if (successLevel < maxLevel) {
+				// Manage success level
+				//successLevel = score1 - score2;
+				if (successLevel < 0) successLevel = 0;
+			} else {
 				// Beat the level!
 				state = GameState.GAMEOVER;
+
+				// Stop current music, start victory music!
+				bgMusic[curLevel][successLevel-1].pause(); // last successlevel
+				victoryMusic[curLevel].play();
+
+				successLevel--; // help with GameState.SINGLE
 			}
 		}
 	}

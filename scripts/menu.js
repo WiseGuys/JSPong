@@ -260,8 +260,6 @@ function menu() {
 		// Load options
 		mouseControl = getCookie("mouseControl");
 
-		console.log(mouseControl);
-
 		this.buttonsOptions[0].isChecked = mouseControl;
 
 		// Help menu

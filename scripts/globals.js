@@ -4,6 +4,9 @@
 // The ones that don't require any other code
 // To help load value
 
+// Freakin context
+var c, ctx;
+
 // Constants
 var SPEED_PLAYER = 15;
 var WIDTH_PLAYER = 8;
@@ -64,23 +67,28 @@ var Ab1a = new Audio("sounds/Ab1a.wav");
 // Levels sounds
 var C5a = new Audio("sounds/C5a.wav");
 var C5b = new Audio("sounds/C5b.wav");
-var C5 = [C5a, C5b];
+var C5c = new Audio("sounds/C5b.wav");
+var C5 = [C5a, C5b, C5c];
 
 var Ab4a = new Audio("sounds/Ab4a.wav");
 var Ab4b = new Audio("sounds/Ab4b.wav");
-var Ab4 = [Ab4a, Ab4b];
+var Ab4c = new Audio("sounds/Ab4b.wav");
+var Ab4 = [Ab4a, Ab4b, Ab4c];
 
 var Db5a = new Audio("sounds/Db5a.wav");
 var Db5b = new Audio("sounds/Db5b.wav");
-var Db5 = [Db5a, Db5b];
+var Db5c = new Audio("sounds/Db5b.wav");
+var Db5 = [Db5a, Db5b, Db5c];
 
 var Eb5a = new Audio("sounds/Eb5a.wav");
 var Eb5b = new Audio("sounds/Eb5b.wav");
-var Eb5 = [Eb5a, Eb5b];
+var Eb5c = new Audio("sounds/Eb5b.wav");
+var Eb5 = [Eb5a, Eb5b, Eb5c];
 
 var Bb4a = new Audio("sounds/Bb4a.wav");
 var Bb4b = new Audio("sounds/Bb4b.wav");
-var Bb4 = [Bb4a, Bb4b];
+var Bb4c = new Audio("sounds/Bb4b.wav");
+var Bb4 = [Bb4a, Bb4b, Bb4c];
 
 var sounds = [C5, Ab4, Ab4, C5, C5, Ab4, Ab4, C5, Db5, Eb5, Db5, C5, Bb4, C5];
 var currentSound = 0;
@@ -93,14 +101,38 @@ musicOneA.loop = true;
 var musicOneB = new Audio("sounds/bg1b.wav");
 musicOneB.volume = 0.3;
 musicOneB.loop = true;
-var musicOne = [musicOneA, musicOneB];
+var musicOneC = new Audio("sounds/bg1b.wav");
+musicOneC.volume = 0.3;
+musicOneC.loop = true;
+var musicOne = [musicOneA, musicOneB, musicOneC];
 
-console.log(musicOne);
+var musicTwoA = new Audio("sounds/bg1a.wav");
+musicTwoA.volume = 0.3;
+musicTwoA.loop = true;
+var musicTwoB = new Audio("sounds/bg1b.wav");
+musicTwoB.volume = 0.3;
+musicTwoB.loop = true;
+var musicTwoC = new Audio("sounds/bg1b.wav");
+musicTwoC.volume = 0.3;
+musicTwoC.loop = true;
+var musicTwo = [musicTwoA, musicTwoB, musicTwoC];
+
+var bgMusic = [musicOne, musicTwo];
+
+var victoryMusicOne = new Audio("sounds/victoryMusicOne.mp3");
+victoryMusicOne.loop = true;
+var victoryMusicTwo = new Audio("sounds/victoryMusicOne.mp3");
+victoryMusicTwo.loop = true;
+
+var victoryMusic = [victoryMusicOne, victoryMusicTwo];
+
+var victorySound = new Audio("sounds/victory.wav");
 
 // Levels
 var curLevel = 0;
 var successLevel = 0;
 var maxLevel = 0;
+var finalLevel = 0;
 
 // Key controller stuff
 var Key = {

@@ -20,7 +20,7 @@ function ai(pers) {
 	function load() {
 		switch (this.personality) {
 		case "folo":
-			this.speed = 0;
+			this.speed = 3;
 			break;
 		case "halfolo":
 			this.speed = 6;

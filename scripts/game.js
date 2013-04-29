@@ -31,7 +31,6 @@ function Game() {
 
 	function main() {
 		if (playing) {
-			console.log(state);
 			// Gamestate switch
 			switch(state) {
 			case GameState.LOAD:
@@ -46,8 +45,6 @@ function Game() {
 				resetController.draw();
 				break;
 			case GameState.SINGLE:
-				musicOne[successLevel].play();
-
 				// Single player menu screen
 				// Menu controller single player would be level select
 
@@ -58,10 +55,16 @@ function Game() {
 				albert.setPers(levels[curLevel].aiPersonality);
 				maxLevel = levels[curLevel].goal;
 
+				// Stop old music
+				if (curLevel > 0) bgMusic[curLevel - 1][successLevel].pause();
+
 				// Reset score
 				successLevel = 0;
 				score1 = 0;
 				score2 = 0;
+
+				// bg music (has to go after successLevel is reset)
+				bgMusic[curLevel][successLevel].play();
 
 				// Draw page
 				var c = document.getElementById("canvas");
@@ -91,7 +94,7 @@ function Game() {
 				}
 				break;
 			case GameState.TWO:
-				musicOne[successLevel].play();
+				bgMusic[curLevel][successLevel].play();
 				state = GameState.RESET;
 				resetController.load();
 				break;
@@ -103,33 +106,61 @@ function Game() {
 				pauseMenu();
 				break;
 			case GameState.GAMEOVER:
-				// Success!
-				// Draw page
-				var c = document.getElementById("canvas");
-				var ctx = c.getContext("2d");
-				canvas.width = canvas.width;
-				ctx.fillStyle = "#000";
-				
-				// Title
-				ctx.font="30px Arial";
-				var textDimensions = ctx.measureText(levels[curLevel].name);
-				ctx.fillText(levels[curLevel].name,WIDTH / 2 - textDimensions.width / 2, 60);
+				if (curLevel >= finalLevel) { // full success
+					victorySound.play();
 
-				// Message
-				ctx.font="15px Arial";
-				textDimensions = ctx.measureText(levels[curLevel].victory);
-				ctx.fillText(levels[curLevel].victory,WIDTH / 2 - textDimensions.width / 2, 200);
+					var c = document.getElementById("canvas");
+					var ctx = c.getContext("2d");
+					canvas.width = canvas.width;
+					ctx.fillStyle = "#000";
+					
+					// Title
+					ctx.font="30px Arial";
+					var textDimensions = ctx.measureText("You win");
+					ctx.fillText("You win",WIDTH / 2 - textDimensions.width / 2, 60);
 
-				// Continue
-				ctx.font="15px Arial";
-				textDimensions = ctx.measureText("Press Space to continue");
-				ctx.fillText("Press Space to continue",WIDTH / 2 - textDimensions.width / 2, 300);
+					// Text
+					ctx.font = "15px Arial";
+					textDimensions = ctx.measureText("Press enter to go back to the main menu");
+					ctx.fillText("Press enter to go back to the main menu",WIDTH / 2 - textDimensions.width / 2, HEIGHT / 2);
 
-				if (Key.isDown(Key.SPACE)) {
-					state = GameState.SINGLE;
-					curLevel += 1;
+					if (Key.isDown(Key.ENTER)) {
+						state = GameState.MENU;
+						stateMenu = MenuState.MAIN;
+					}
+				} else {
+					// Success!
+					// Draw page
+					var c = document.getElementById("canvas");
+					var ctx = c.getContext("2d");
+					canvas.width = canvas.width;
+					ctx.fillStyle = "#000";
+					
+					// Title
+					ctx.font="30px Arial";
+					var textDimensions = ctx.measureText(levels[curLevel].name);
+					ctx.fillText(levels[curLevel].name,WIDTH / 2 - textDimensions.width / 2, 60);
+
+					// Message
+					ctx.font="15px Arial";
+					textDimensions = ctx.measureText(levels[curLevel].victory);
+					ctx.fillText(levels[curLevel].victory,WIDTH / 2 - textDimensions.width / 2, 200);
+
+					// Continue
+					ctx.font="15px Arial";
+					textDimensions = ctx.measureText("Press Space to continue");
+					ctx.fillText("Press Space to continue",WIDTH / 2 - textDimensions.width / 2, 300);
+
+					if (Key.isDown(Key.SPACE)) {
+						console.log("space");
+						victoryMusic[curLevel].pause();
+						curLevel++;
+						if (curLevel < finalLevel) {
+							state = GameState.SINGLE;
+						}
+					}
+					break;
 				}
-				break;
 			}
 		} else {
 			// End interval, look up later
@@ -194,11 +225,11 @@ function Game() {
 			if (currentSound >= maxSound) {
 				currentSound = 0;
 				if (players == 1) score1 += 1;
-				var curTime = musicOne[successLevel].currentTime;
-				if (successLevel < 1) {
-					musicOne[successLevel].pause();
-					musicOne[successLevel+1].currentTime = curTime;
-					musicOne[successLevel+1].play();
+				var curTime = bgMusic[curLevel][successLevel].currentTime;
+				if (successLevel < maxLevel-1) {
+					bgMusic[curLevel][successLevel].pause();
+					bgMusic[curLevel][successLevel+1].currentTime = curTime;
+					bgMusic[curLevel][successLevel+1].play();
 				}
 				resetController.manageSuccess();
 			}
@@ -247,11 +278,11 @@ function Game() {
 					currentSound = 0;
 					// C-C-C-Combo breaker
 					if (players == 1) score1 += 1;
-					var curTime = musicOne[successLevel].currentTime;
-					if (successLevel < 1) {
-						musicOne[successLevel].pause();
-						musicOne[successLevel+1].currentTime = curTime;
-						musicOne[successLevel+1].play();
+					var curTime = bgMusic[curLevel][successLevel].currentTime;
+					if (successLevel < maxLevel-1) {
+						bgMusic[curLevel][successLevel].pause();
+						bgMusic[curLevel][successLevel+1].currentTime = curTime;
+						bgMusic[curLevel][successLevel+1].play();
 					}
 					resetController.manageSuccess();
 				}
@@ -288,12 +319,13 @@ function Game() {
 					currentSound = 0;
 					// C-C-C-Combo breaker
 					if (players == 1) score1 += 1;
+					successLevel++;
 					// BG music level up
-					var curTime = musicOne[successLevel].currentTime;
-					if (successLevel < 1) {
-						musicOne[successLevel].pause();
-						musicOne[successLevel+1].currentTime = curTime;
-						musicOne[successLevel+1].play();
+					var curTime = bgMusic[curLevel][successLevel].currentTime;
+					if (successLevel < maxLevel) {
+						bgMusic[curLevel][successLevel].pause();
+						bgMusic[curLevel][successLevel].currentTime = curTime;
+						bgMusic[curLevel][successLevel].play();
 					}
 					resetController.manageSuccess();
 				}
@@ -309,40 +341,40 @@ function Game() {
 		if (gameBall.x > WIDTH) {
 			// Point player1 (good)
 			score1 += 1;
+			successLevel++;
 			twoScored = 0;			
 			scoreSound.play();
 			state = GameState.RESET;
 
 			// BG music level up
-			var curTime = musicOne[successLevel].currentTime;
-			if (successLevel < 1) {
-				musicOne[successLevel].pause();
-				musicOne[successLevel+1].currentTime = curTime;
-				musicOne[successLevel+1].play();
+			var curTime = bgMusic[curLevel][successLevel].currentTime;
+			if (successLevel < maxLevel-1) {
+				bgMusic[curLevel][successLevel-1].pause();
+				bgMusic[curLevel][successLevel+1].currentTime = curTime;
+				bgMusic[curLevel][successLevel+1].play();
 			}
 			resetController.load();
 		}
 
 		if (gameBall.x < 0) {
 			score2 += 1;
+			if (successLevel > 0) successLevel--;
 			twoScored = 1;
 			pointLostSound.play();
 			state = GameState.RESET;
 
-			// BG music level up
-			var curTime = musicOne[successLevel].currentTime;
+			// BG music level down
+			var curTime = bgMusic[curLevel][successLevel].currentTime;
 			if (successLevel > 0) {
-				musicOne[successLevel].pause();
-				musicOne[successLevel-1].currentTime = curTime;
-				musicOne[successLevel-1].play();
+				bgMusic[curLevel][successLevel+1].pause();
+				bgMusic[curLevel][successLevel].currentTime = curTime;
+				bgMusic[curLevel][successLevel].play();
 			}
 			resetController.load();
 		}
 	}
 
 	function draw() {
-    	var c=document.getElementById("canvas");
-    	var ctx=c.getContext("2d");
     	canvas.width = canvas.width; // clear screen
     	ctx.fillStyle="#000";
 
@@ -361,16 +393,18 @@ function Game() {
 
     	// Scores
     	ctx.font="30px Arial";
-    	ctx.fillText(score1,600,25);
-    	ctx.fillText(score2,660,25);
+    	if (players == 1) {
+    		ctx.fillText(successLevel, WIDTH / 2, 25);
+    	} else {
+    		ctx.fillText(score1,600,25);
+    		ctx.fillText(score2,660,25);
+		}
 
     	// Draw it
     	ctx.stroke();
     }
 
     function pauseMenu() {
-    	var c=document.getElementById("canvas");
-    	var ctx=c.getContext("2d");
     	ctx.fillStyle="#000";
 
     	// Box in middle
@@ -393,6 +427,8 @@ function Game() {
     	if (Key.isDown(Key.ENTER)) {
     		state = GameState.MENU;
     		stateMenu = MenuState.MAIN;
+    		bgMusic[curLevel][successLevel].pause();
+    		bgMusic[curLevel][successLevel].currentTime = 0;
     	}
     }
 }

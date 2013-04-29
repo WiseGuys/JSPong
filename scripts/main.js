@@ -26,20 +26,22 @@ var butPlayTwo = new button("Play");
 var checkMouse = new checkbox("Mouse control");
 
 // Levels
-var levelOne = new level("Brahms Waltz in Ab", "Help save this song from the bad guys", "Congrats, you win!", [C5, Ab4, Ab4, C5, C5, Ab4, Ab4, C5, Db5, Eb5, Db5, C5, Bb4, C5], "folo", musicOne, 1);
-var levelTwo = new level("Dark Horse", "Not Nickelback", "Still not Nickelback", [C5, Bb4], "halfolo");
+var levelOne = new level("Brahms Waltz in Ab", "Help save this song from the bad guys", "Congrats, you win!", [C5, Ab4, Ab4, C5, C5, Ab4, Ab4, C5, Db5, Eb5, Db5, C5, Bb4, C5], "folo", musicOne, 3);
+var levelTwo = new level("Dark Horse", "Not Nickelback", "Still not Nickelback", [C5, Bb4], "halfolo", musicTwo, 3);
 
 var levels = [levelOne, levelTwo];
+finalLevel = levels.length;
 
 // Start the game!
 function loadGame() {
+    c=document.getElementById("canvas");
+    ctx=c.getContext("2d");
 	GameController.load();
 }
 
 // Handles clicks straight from canvas element
 function clickEvent() {
     var mouseLoc = getMouse();
-
     menuController.checkClicks(mouseLoc._mx, mouseLoc._my);
 }
 
