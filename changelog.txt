@@ -3,9 +3,14 @@ JSPong v1.4:
 	Added a pause menu
 	Added background music that corresponds to the success level
 	Implemented multiple levels
+	Fixed where single player menus would show in front of two player game
+	Added way to get back to main menu from pause
 	Implemented final victory
 		With music
 	Made sure bg music gets stopped when exiting game from pause menu
+	Took the ai speeds down some
+	A combo breaker doesn't win a level
+	Fixed some things
 
 JSPong v1.3.1:
 	Fixed a typo

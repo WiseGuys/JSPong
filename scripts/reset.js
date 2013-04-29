@@ -14,7 +14,7 @@ function reset() {
 	this.manageSuccess = manageSuccess;
 
 	function load() {
-		gameBall.load(WIDTH / 2, Math.floor(Math.random() * 401) + 160);
+		gameBall.load(WIDTH / 2, Math.floor(Math.random() * 401) + HEIGHT / 4);
 		ballHitY = gameBall.y;
 		ballHitX = gameBall.x;
 		firstPlayer.load(PLAYER_BUFFER, HEIGHT / 2 - HEIGHT_PLAYER / 2); // Init left player
@@ -25,7 +25,7 @@ function reset() {
 		// Quit?
 		if (Key.isDown(Key.ESC)) playing = 0;
 
-		this.manageSuccess();
+		//this.manageSuccess();
 
 		// Start game
 		if (Key.isDown(Key.SPACE)) {
@@ -82,12 +82,13 @@ function reset() {
 	}
 
 	function manageSuccess() {
+		console.log("manage");
 		if (players == 1) {
 			if (successLevel < maxLevel) {
 				// Manage success level
-				//successLevel = score1 - score2;
 				if (successLevel < 0) successLevel = 0;
 			} else {
+				console.log("win");
 				// Beat the level!
 				state = GameState.GAMEOVER;
 

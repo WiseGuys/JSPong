@@ -23,7 +23,7 @@ function ai(pers) {
 			this.speed = 3;
 			break;
 		case "halfolo":
-			this.speed = 6;
+			this.speed = 4.5;
 			break;
 		case "smart":
 			this.speed = 10;
